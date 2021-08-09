@@ -53,7 +53,7 @@ func handleGetTasks(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	result, error := GetByTitle(task.Title)
+	result, error := GetByID(task.ID)
 	if error != nil {
 		log.Printf("Error in mongo - GET %v", error)
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": error})

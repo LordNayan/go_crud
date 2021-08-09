@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -22,18 +23,19 @@ func Create(task *Task) (primitive.ObjectID, error) {
 		log.Printf("Could not create Task: %v", err)
 		return primitive.NilObjectID, err
 	}
-	oid := result.InsertedID.(primitive.ObjectID)
-	return oid, nil
+	fmt.Println("task ID =========> ", result)
+	return task.ID, nil
 }
 
-func GetByTitle(title string) (Task, error) {
+func GetByID(ID primitive.ObjectID) (Task, error) {
 	result := Task{}
-	filter := bson.D{primitive.E{Key: "title", Value: title}}
+	filter := bson.D{primitive.E{Key: "id", Value: ID}}
 	client, ctx, cancel := getConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	//Create a handle to the respective collection in the database.
 	collection := client.Database("tasks").Collection("tasks")
+	fmt.Println("ID ======> ", ID)
 
 	//Perform FindOne operation & validate against the error.
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
